@@ -1,0 +1,14 @@
+
+pc_recepcionista pc_armazem pc_visi1 pc_visi2:router_OfLIS switch_admin
+
+
+pc_recepcionistaPOR pc_armazemPOR pc_visi1POR pc_visi2POR:router_OfPOR switch_adminPOR
+
+
+pc_recepcionistaCOIM pc_armazemCOIM pc_visi1COIM pc_visi2COIM:router_OfCOIM switch_adminCOIM
+
+
+pc_recepcionistaSEDE pc_armazemSEDE pc_rhSEDE pc_visi1SEDE pc_visi2SEDE:router_sede switch_adminSEDE
+
+
+

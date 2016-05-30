@@ -1,0 +1,47 @@
+ip addr add dev eth4 10.0.0.241/30
+ip addr add dev eth5 10.0.0.254/30
+ip addr add dev eth3 10.0.0.1/30
+ip addr add dev eth2 10.0.0.145/29
+ip addr add dev eth1 10.0.0.129/28
+ip addr add dev eth0 10.0.0.153/29
+ip addr add dev eth7 192.168.0.1/29
+ip link set dev eth4 up
+ip link set dev eth5 up
+ip link set dev eth3 up
+ip link set dev eth2 up
+ip link set dev eth1 up
+ip link set dev eth0 up
+ip link set dev eth7 up
+
+/etc/init.d/dhcp3-server start
+/etc/init.d/zebra start
+ip route add 10.0.0.64/29 via 10.0.0.146
+ip route add 10.0.0.4/30 via 10.0.0.2
+ip route add 10.0.0.8/29 via 10.0.0.2
+
+############
+iptables -A FORWARD -s 10.0.0.4/30 -j DROP
+iptables -A FORWARD -s 10.0.0.8/29 -j DROP
+iptables -I FORWARD -i eth3 -d 10.0.0.144/29 -p tcp --match multiport --dports 80,22,53,443,25,143,1194 -j ACCEPT
+iptables -I FORWARD -i eth6 -d 10.0.0.144/29 -p tcp --match multiport --dports 80,22,53,443,25,143,1194 -j ACCEPT
+iptables -I FORWARD -i eth3 -d 10.0.0.144/29 -p udp --match multiport --dports 80,22,53,443,25,143,1194 -j ACCEPT
+iptables -I FORWARD -i eth6 -d 10.0.0.144/29 -p udp --match multiport --dports 80,22,53,443,25,143,1194 -j ACCEPT
+iptables -I FORWARD -i eth3 -d 192.168.0.0/29 -p tcp --match multiport --dports 80,22,53,443,25,143,1194 -j ACCEPT
+iptables -I FORWARD -i eth6 -d 192.168.0.0/29 -p tcp --match multiport --dports 80,22,53,443,25,143,1194 -j ACCEPT
+iptables -I FORWARD -i eth3 -d 192.168.0.0/29 -p udp --match multiport --dports 80,22,53,443,25,143,1194 -j ACCEPT
+iptables -I FORWARD -i eth6 -d 192.168.0.0/29 -p udp --match multiport --dports 80,22,53,443,25,143,1194 -j ACCEPT
+iptables -A FORWARD -s 192.168.1.0/24 -j DROP
+iptables -I FORWARD -s 192.168.1.0/24 -d 10.0.0.128/28 -j ACCEPT
+iptables -I FORWARD -s 192.168.1.0/24 -d 10.0.0.192/28 -j ACCEPT
+iptables -I FORWARD -s 192.168.1.0/24 -d 10.0.0.208/28 -j ACCEPT
+iptables -I FORWARD -s 192.168.1.0/24 -d 10.0.0.224/28 -j ACCEPT
+iptables -I FORWARD -s 10.0.0.4/30 -d 10.0.0.128/28 -j ACCEPT
+iptables -I FORWARD -s 10.0.0.4/30 -d 10.0.0.192/28 -j ACCEPT
+iptables -I FORWARD -s 10.0.0.4/30 -d 10.0.0.208/28 -j ACCEPT
+iptables -I FORWARD -s 10.0.0.4/30 -d 10.0.0.224/28 -j ACCEPT
+iptables -I FORWARD -s 10.0.0.8/29 -d 10.0.0.128/28 -j ACCEPT
+iptables -I FORWARD -s 10.0.0.8/29 -d 10.0.0.192/28 -j ACCEPT
+iptables -I FORWARD -s 10.0.0.8/29 -d 10.0.0.208/28 -j ACCEPT
+iptables -I FORWARD -s 10.0.0.8/29 -d 10.0.0.224/28 -j ACCEPT
+iptables -t nat -A POSTROUTING -j MASQUERADE
+iptables -I FORWARD -i tap+ -j ACCEPT

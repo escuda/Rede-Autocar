@@ -1,0 +1,28 @@
+ip addr add dev eth0 10.0.0.147/29
+ip link set dev eth0 up
+ip route add default via 10.0.0.145
+/etc/init.d/bind start
+/etc/init.d/snmpd start
+/etc/init.d/ssh start
+
+chmod a+w /var/spool/mail
+chmod go-rw /etc/exim4/exim4.conf
+
+/etc/init.d/exim4 start
+/etc/init.d/inetd start
+rndc reload
+adduser --disabled-password --gecos "" administracao
+echo "administracao:administracao" | chpasswd
+adduser --disabled-password --gecos "" contabilidade
+echo "contabilidade:contabilidade" | chpasswd
+adduser --disabled-password --gecos "" rh
+echo "rh:rh" | chpasswd
+adduser --disabled-password --gecos "" superuser
+echo "superuser:superuser" | chpasswd
+###############################################
+cd /home
+chown -R superuser:superuser superuser
+chmod -R 700 superuser/
+dpkg -i /hostlab/shared/sudo_1.6.9p17-3_i386.deb
+###########################################
+

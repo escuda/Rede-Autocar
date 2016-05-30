@@ -1,0 +1,22 @@
+ip addr add dev eth0 10.0.0.146/29
+ip link set dev eth0 up
+ip route add default via 10.0.0.145
+
+/etc/init.d/ssh start
+/etc/init.d/bind start
+/etc/init.d/apache2 start
+a2ensite www.autocar.ttt.conf
+a2ensite intranet.autocar.ttt.conf
+a2enmod ssl
+/etc/init.d/apache2 restart
+rndc reload
+adduser --disabled-password --gecos "" superuser
+echo "superuser:superuser" | chpasswd
+###############################################
+cd /home
+chown -R superuser:superuser superuser
+chmod -R 700 superuser/
+dpkg -i /hostlab/shared/sudo_1.6.9p17-3_i386.deb
+###########################################
+ip route add 192.168.0.0/29 via 10.0.0.145
+ip route add 10.0.0.252/30 via 10.0.0.145
